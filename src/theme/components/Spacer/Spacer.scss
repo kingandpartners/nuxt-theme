@@ -1,0 +1,13 @@
+@use '!!theme/assets/scss/abstracts' as *;
+
+.spacer {
+  padding-top: var(--space-top);
+
+  @include breakpoint(tablet) {
+    padding-top: var(--space-top-tablet);
+  }
+
+  @include breakpoint(tabletWide) {
+    padding-top: var(--space-top-desktop);
+  }
+}

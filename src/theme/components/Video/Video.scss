@@ -1,0 +1,68 @@
+@use '!!theme/assets/scss/abstracts' as *;
+
+.video {
+  $c: &;
+
+  @include flex();
+  height: 100%;
+  position: relative;
+
+  &__video {
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &__control-btn {
+    @include flex();
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    z-index: z('one');
+
+    &.enable-ctrl-btn-bg {
+      background-color: rgba(236, 236, 242, 0.6);
+    }
+
+    &.enable-ctrl-btn-light {
+      #{$c}__icon {
+        svg {
+          [fill] {
+            fill: color('white');
+          }
+        }
+      }
+    }
+  }
+
+  &__icon {
+    display: block;
+    height: 8px;
+
+    svg {
+      [fill] {
+        fill: color('black');
+      }
+    }
+  }
+
+  @include breakpoint(tablet) {
+    &__control-btn {
+      height: 20px;
+      width: 20px;
+    }
+
+    &__icon {
+      height: 10px;
+
+      &--play {
+        margin-left: 2px;
+      }
+    }
+  }
+}

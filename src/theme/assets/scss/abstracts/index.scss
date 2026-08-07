@@ -1,0 +1,14 @@
+/*
+This file is used to contain all abstracts imports.
+Files inside this folder can contain abstract settings, helpers or functions. They have no direct output.
+
+NOTE: This file is loaded by Vite CSS Pre-processor options configured in nuxt.config.js for use in component scss files.
+Add variable, mixins, and other files that would need to be used in components
+*/
+
+//Import Abstracts files
+@forward 'breakpoints';
+@forward 'functions';
+@forward 'mixins';
+@forward 'variables';
+@forward 'z-index';

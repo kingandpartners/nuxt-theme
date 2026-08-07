@@ -1,0 +1,60 @@
+/* Usage
+
+body {
+  background-color: color('white');
+}
+*/
+@use 'sass:map';
+@use '!!theme/assets/scss/abstracts/colors' as c;
+@use 'z-index' as z;
+
+@function get($map, $keys...) {
+  @each $key in $keys {
+    $map: map.get($map, $key);
+  }
+  @return $map;
+}
+
+@function color($color) {
+  @return get(c.$colors, $color);
+}
+
+@function z($key) {
+  @return get(z.$z-index, $key);
+}
+
+@function gutter($number) {
+  @return 16px * $number;
+}
+
+/**
+ * Converts px to rem
+ *
+ * Usage:
+ *   .h1 {
+ *    font-size: calcRem(16px);
+ *  }
+ */
+@function calcRem($size) {
+  $remSize: calc($size / 10px);
+  @return $remSize * 1rem;
+}
+
+/**
+ * @function generate-list
+ * Generates a list of numbers and accepts a multiplier value for each item
+ *
+ * Accepts:
+ * - $start: The first number in the list
+ * - $end: The last number in the list
+ * - $multiplier: An optional multiplier for each number in the list. Defaults to 1
+ */
+@function generate-list($start, $end, $multiplier: 1) {
+  $list: ();
+
+  @for $i from $start through $end {
+    $list: append($list, $i * $multiplier);
+  }
+
+  @return $list;
+}

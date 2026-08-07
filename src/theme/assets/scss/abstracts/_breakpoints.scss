@@ -1,0 +1,33 @@
+/* Breakpoints */
+$breakpoints: (
+  smallMobile: (
+    min-width: 375px,
+  ),
+  mobile: (
+    min-width: 414px,
+  ),
+  mobileWide: (
+    min-width: 600px,
+  ),
+  tablet: (
+    min-width: 768px,
+  ),
+  tabletWide: (
+    min-width: 1024px,
+  ),
+  smallDesktop: (
+    min-width: 1110px,
+  ),
+  desktop: (
+    min-width: 1200px,
+  ),
+  midDesktop: (
+    min-width: 1350px,
+  ),
+  largeDesktop: (
+    min-width: 1440px,
+  ),
+  xlDesktop: (
+    min-width: 1600px,
+  ),
+);

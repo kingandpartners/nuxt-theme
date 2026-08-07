@@ -1,0 +1,9 @@
+// animations
+$transitionDuration: 0.4s;
+$transitionTimingFunction: ease-in-out;
+
+// compatability/consistency
+$trueVh: var(--vh, 1vh);
+$defaultHeaderHeight: 55px;
+$headerHeight: var(--header-height, $defaultHeaderHeight);
+$headerZ: 50;

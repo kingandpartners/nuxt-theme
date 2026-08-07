@@ -1,0 +1,26 @@
+@use '!!theme/assets/scss/abstracts' as *;
+
+.modal-dialog {
+  &__underlay {
+    @include fill();
+    position: fixed;
+    display: none;
+    z-index: z('hidden');
+
+    &.open {
+      display: block;
+      z-index: z('underlay');
+    }
+  }
+
+  &__container {
+    position: fixed;
+    visibility: hidden;
+    z-index: z('hidden');
+
+    &.open {
+      visibility: visible;
+      z-index: z('drawer');
+    }
+  }
+}

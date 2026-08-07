@@ -1,0 +1,27 @@
+@use './../abstracts' as *;
+
+.svg {
+  @include flex();
+
+  svg {
+    @include flex();
+    height: auto;
+    width: 100%;
+  }
+
+  &--align-height {
+    svg {
+      height: 100%;
+      width: auto;
+    }
+  }
+}
+
+.visually-hidden,
+.sr-only {
+  @include visually-hidden;
+}
+
+.visually-shown {
+  @include visually-shown;
+}

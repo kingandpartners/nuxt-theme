@@ -1,0 +1,23 @@
+@use '!!theme/assets/scss/abstracts' as *;
+
+.logo {
+  text-align: center;
+
+  picture {
+    display: block;
+  }
+
+  .logo__img {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  @include breakpoint(tablet) {
+  }
+
+  @include breakpoint(tabletWide) {
+  }
+}

@@ -1,0 +1,11 @@
+@use '!!theme/assets/scss/abstracts' as *;
+
+.template-splash {
+  &.template-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}

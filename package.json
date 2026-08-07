@@ -1,0 +1,39 @@
+{
+  "name": "@kingandpartners/nuxt-theme",
+  "version": "0.1.0",
+  "description": "Shared King & Partners Nuxt theme components, templates, assets, and Sass foundations",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/config.js"
+    },
+    "./config": {
+      "import": "./src/config.js"
+    },
+    "./theme/*": {
+      "import": "./src/theme/*"
+    }
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "dependencies": {
+    "debounce": "^3.0.0",
+    "validate.js": "^0.13.1",
+    "vue-flatpickr-component": "^12.0.0"
+  },
+  "peerDependencies": {
+    "@kingandpartners/nuxt-platform": ">=0.16.0",
+    "nuxt": ">=4.0.0",
+    "vue": ">=3.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kingandpartners/nuxt-theme.git"
+  },
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  }
+}
