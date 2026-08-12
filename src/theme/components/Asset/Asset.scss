@@ -1,0 +1,25 @@
+@use '!!theme/assets/scss/abstracts' as *;
+
+// A single image or video that fills whatever box the consumer gives it.
+// Size the parent (or the `${modifierClass}__asset` hook) — never this file.
+.asset {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}

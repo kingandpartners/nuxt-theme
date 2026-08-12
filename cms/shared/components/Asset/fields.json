@@ -1,0 +1,76 @@
+{
+  "group": {
+    "name": "asset",
+    "title": "Asset"
+  },
+  "fields": [
+    {
+      "label": "Asset Type",
+      "name": "asset_type",
+      "type": "button_group",
+      "choices": {
+        "image": "Image",
+        "video": "Video"
+      },
+      "default_value": "image"
+    },
+    {
+      "label": "Image",
+      "name": "image",
+      "type": "image",
+      "conditional_logic": [
+        [
+          {
+            "fieldPath": "asset_type",
+            "operator": "==",
+            "value": "image"
+          }
+        ]
+      ]
+    },
+    {
+      "label": "Video",
+      "name": "video",
+      "type": "file",
+      "mime_types": "mp4",
+      "conditional_logic": [
+        [
+          {
+            "fieldPath": "asset_type",
+            "operator": "==",
+            "value": "video"
+          }
+        ]
+      ]
+    },
+    {
+      "label": "WebM",
+      "name": "webm",
+      "type": "file",
+      "mime_types": "webm",
+      "conditional_logic": [
+        [
+          {
+            "fieldPath": "asset_type",
+            "operator": "==",
+            "value": "video"
+          }
+        ]
+      ]
+    },
+    {
+      "label": "Poster",
+      "name": "poster",
+      "type": "image",
+      "conditional_logic": [
+        [
+          {
+            "fieldPath": "asset_type",
+            "operator": "==",
+            "value": "video"
+          }
+        ]
+      ]
+    }
+  ]
+}

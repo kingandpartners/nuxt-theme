@@ -1,0 +1,7 @@
+# Composer builds its dist archive with `git archive`, so keep the frontend out
+# of the mu-plugin that lands in WordPress. npm is unaffected — it packs from
+# the working tree using the `files` list in package.json.
+/src            export-ignore
+/package.json   export-ignore
+/.github        export-ignore
+/.gitattributes export-ignore
