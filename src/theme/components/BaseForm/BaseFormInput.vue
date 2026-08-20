@@ -45,7 +45,15 @@
 </template>
 
 <script setup>
-import validate from 'validate.js';
+// Lifted verbatim from validate.js 0.13.1 (validators.email.PATTERN), which
+// this component used to depend on for exactly this one check. Keeping the
+// pattern byte-for-byte means no address that used to validate stops doing so.
+//
+// The dependency was dropped because it is a 2019 UMD bundle whose CommonJS
+// exports are invisible to esbuild -- it wraps everything in an IIFE that takes
+// `module` and `exports` as arguments -- so the default import resolves to
+// undefined in a dev server and takes the whole page down with it.
+const EMAIL_PATTERN = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i;
 
 const props = defineProps({
   type: {
@@ -114,9 +122,7 @@ const validateField = () => {
   errMsg.value = isValid ? '' : props.requiredErrorMessage;
 
   if (props.type === 'email' && hasValue) {
-    const emailValidation = validate.single(props.modelValue, { email: true });
-
-    isValid = emailValidation === undefined;
+    isValid = EMAIL_PATTERN.test(props.modelValue);
     errMsg.value = isValid ? '' : 'Invalid email';
   }
 
