@@ -71,6 +71,11 @@ const inputRef = ref(null);
 
 const errMsg = ref('');
 
+// Set the first time the field is validated -- on submit, or when the form
+// walks its fields. Until then the field says nothing, because complaining
+// about a field nobody has reached yet is noise.
+const validated = ref(false);
+
 const registerToForm = inject('registerToForm');
 
 onMounted(() => {
@@ -81,6 +86,8 @@ onMounted(() => {
 });
 
 const validateField = () => {
+  validated.value = true;
+
   const hasValue = !!props.modelValue;
   const isValid = props.required ? hasValue : true;
 
@@ -88,6 +95,13 @@ const validateField = () => {
 
   return isValid;
 };
+
+// Once a field has been told it is wrong, it re-checks itself as the value
+// changes: an error that survives being corrected reads as the form having
+// stopped listening.
+watch(() => props.modelValue, () => {
+  if (validated.value) validateField();
+});
 
 const focusField = () => {
   inputRef.value.focus();
