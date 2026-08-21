@@ -1,6 +1,6 @@
 {
   "name": "@kingandpartners/nuxt-theme",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Shared King & Partners Nuxt theme components, templates, assets, and Sass foundations",
   "type": "module",
   "exports": {
