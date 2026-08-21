@@ -9,7 +9,8 @@
       class="base-form-input__input input"
       :type="type"
       :name="name"
-      :placeholder="label"
+      :value="modelValue"
+      :placeholder="placeholder || label"
       :required="required"
       :aria-describedby="`${name}-description`"
       v-bind="attributes"
@@ -78,6 +79,12 @@ const props = defineProps({
   },
 
   description: {
+    type: String,
+    required: false,
+    default: '',
+  },
+
+  placeholder: {
     type: String,
     required: false,
     default: '',

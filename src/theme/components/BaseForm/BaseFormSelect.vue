@@ -15,7 +15,7 @@
         @change="emit('update:modelValue', $event.target.value)"
       >
         <option value="">
-          Select...
+          {{ placeholder || 'Select...' }}
         </option>
 
         <option
@@ -59,6 +59,12 @@
 import SelectArrow from '!!shared/assets/icons/select-arrow.svg?raw';
 
 const props = defineProps({
+  placeholder: {
+    type: String,
+    required: false,
+    default: '',
+  },
+
   name: {
     type: String,
     required: true,
