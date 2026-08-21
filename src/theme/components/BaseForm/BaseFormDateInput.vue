@@ -10,6 +10,7 @@
       :class="{ 'is-safari-desktop': isSafariDesktop }"
       type="date"
       :name="name"
+      :value="modelValue"
       :required="required"
       :aria-describedby="`${name}-description`"
       v-bind="attributes"
