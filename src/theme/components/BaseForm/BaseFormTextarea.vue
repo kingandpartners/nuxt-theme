@@ -8,7 +8,8 @@
       ref="inputRef"
       class="base-form-textarea__textarea textarea"
       :name="name"
-      :placeholder="name"
+      :value="modelValue"
+      :placeholder="placeholder || label"
       :required="required"
       :aria-describedby="`${name}-description`"
       v-bind="attributes"
@@ -38,6 +39,12 @@
 
 <script setup>
 const props = defineProps({
+  placeholder: {
+    type: String,
+    required: false,
+    default: '',
+  },
+
   name: {
     type: String,
     required: true,
