@@ -1,5 +1,11 @@
 /**
- * Helps set media query using the $breakpoints variable
+ * Helps set media query using the breakpoints scale
+ *
+ * Resolves against the merged scale, so project additions configured through
+ * $custom-breakpoints work here too. See _breakpoints.scss.
+ *
+ * An unknown name emits no media query — the declarations inside are dropped —
+ * and warns, because silently producing nothing is very hard to notice.
  *
  * Usage:
  *   div {
@@ -14,10 +20,16 @@
 @use 'breakpoints' as b;
 
 @mixin breakpoint($breakpoint) {
-  @if map.has-key(b.$breakpoints, $breakpoint) {
-    @media #{meta.inspect(map.get(b.$breakpoints, $breakpoint))} {
+  @if map.has-key(b.$all-breakpoints, $breakpoint) {
+    @media #{meta.inspect(map.get(b.$all-breakpoints, $breakpoint))} {
       @content;
     }
+  } @else {
+    @warn "Unknown breakpoint `#{$breakpoint}`; no media query was emitted and "
+      + "the declarations inside were dropped. Available: "
+      + "#{map.keys(b.$all-breakpoints)}. Add a project-specific breakpoint by "
+      + "configuring $custom-breakpoints where your theme forwards the shared "
+      + "abstracts.";
   }
 }
 
