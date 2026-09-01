@@ -25,6 +25,50 @@ load shared base Sass, and resolve the `!!shared` Sass alias. The consumer
 continues to own `src/themes/<site>`, so project-specific components and styles
 can override or extend the shared theme.
 
+## Breakpoints
+
+`breakpoint()` resolves a name from the shared scale in
+`src/theme/assets/scss/abstracts/_breakpoints.scss`:
+
+```scss
+.hero {
+  @include breakpoint(tablet) { padding: 4rem; }
+}
+```
+
+An unknown name emits no media query — the declarations inside are dropped — and
+warns at compile time. Nothing errors, so watch for the warning; the symptom is
+missing CSS rather than a failed build.
+
+### Adding a project-specific breakpoint
+
+Configure `$custom-breakpoints` where your theme forwards the shared abstracts,
+usually `src/themes/<site>/assets/scss/abstracts/index.scss`:
+
+```scss
+@forward '!!shared/assets/scss/abstracts' with (
+  $custom-breakpoints: (
+    midMobile: (
+      min-width: 500px,
+    ),
+  )
+);
+@forward 'colors';
+@forward 'fonts';
+```
+
+Custom entries are merged over the shared scale, so a same-named entry retunes an
+existing breakpoint for that project instead of adding one. `breakpoint()` picks
+these up with no further wiring.
+
+Two constraints worth knowing:
+
+- Configure it on the barrel your components already load. Each component
+  stylesheet is its own Sass compilation, so configuration applied anywhere else
+  will not be visible to them.
+- The merged scale is `$all-breakpoints`. `$breakpoints` remains the shared scale
+  only, so read `$all-breakpoints` if you need the map directly.
+
 ## ACF field definitions
 
 A shared component usually needs a matching ACF field group, so this repo ships

@@ -1,4 +1,29 @@
-/* Breakpoints */
+/*
+Breakpoints
+
+`$breakpoints` holds the shared scale. `$custom-breakpoints` is the extension
+point for consumer themes: both are `!default`, so a project can configure them
+where it forwards this module.
+
+Add a project-specific breakpoint without touching the shared scale:
+
+  // src/themes/<site>/assets/scss/abstracts/index.scss
+  @forward '!!shared/assets/scss/abstracts' with (
+    $custom-breakpoints: (
+      midMobile: (
+        min-width: 500px,
+      ),
+    )
+  );
+
+Entries in `$custom-breakpoints` win over same-named shared entries, so the same
+mechanism retunes an existing breakpoint. Consumers should read the merged map
+`$all-breakpoints` (or just use the `breakpoint()` mixin) rather than
+`$breakpoints`, which is the shared scale only.
+*/
+
+@use 'sass:map';
+
 $breakpoints: (
   smallMobile: (
     min-width: 375px,
@@ -33,4 +58,10 @@ $breakpoints: (
   xlDesktop: (
     min-width: 1600px,
   ),
-);
+) !default;
+
+// Project-specific additions and overrides. See the note above.
+$custom-breakpoints: () !default;
+
+// The effective scale. `breakpoint()` resolves against this.
+$all-breakpoints: map.merge($breakpoints, $custom-breakpoints);
