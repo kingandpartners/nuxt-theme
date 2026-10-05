@@ -225,7 +225,7 @@ const mountVideo = () => {
 
   if (eagerLoad.value) {
     isLoaded.value = true;
-    if (props.attributes.autoplay) playVideo();
+    if (props.attributes.autoplay) playVideo()?.then(pauseIfReducedMotion);
   } else if (props.loadType === 'lazy') {
     observe();
   }
@@ -287,6 +287,10 @@ const load = async () => {
   if (props.attributes.autoplay) {
     await video.value.play();
     isPaused.value = false;
+
+    // Only once play() has settled: pausing a pending play() rejects it and
+    // would leave the rest of load() unrun.
+    pauseIfReducedMotion();
   }
 
   isLoaded.value = true;
@@ -361,6 +365,13 @@ const playVideo = () => {
 const pauseVideo = () => {
   video.value.pause();
   isPaused.value = true;
+};
+
+// Autoplay is left as is; someone who asked for less motion just gets it
+// paused straight away, with the play control to start it themselves.
+const pauseIfReducedMotion = () => {
+  if (!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return;
+  pauseVideo();
 };
 
 const handleVideoEnd = () => {
