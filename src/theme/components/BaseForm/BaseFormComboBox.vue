@@ -16,6 +16,8 @@
       :aria-label="triggerButtonLabel"
       :aria-expanded="isExpanded ? 'true' : 'false'"
       :aria-controls="`${name}-listbox`"
+      :aria-describedby="`${name}-description`"
+      :aria-invalid="errMsg ? 'true' : undefined"
       @click.prevent="handleToggleClick"
       @keydown="handleToggleKeypress"
     >
@@ -53,6 +55,18 @@
         ></span>
       </li>
     </ul>
+
+    <div
+      :id="`${name}-description`"
+      class="base-form-combo-box__description field-description"
+    >
+      <span
+        v-if="errMsg"
+        class="base-form-combo-box__error-msg field-error"
+      >
+        {{ errMsg }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -81,6 +95,12 @@ const props = defineProps({
     default: false,
   },
 
+  requiredErrorMessage: {
+    type: String,
+    required: false,
+    default: `Required`,
+  },
+
   attributes: {
     type: Object,
     required: false,
@@ -102,6 +122,9 @@ const isExpanded = ref(false);
 const focusedOption = ref(null);
 const errMsg = ref('');
 
+// Set the first time the field is validated, as in the other BaseForm fields.
+const validated = ref(false);
+
 const registerToForm = inject('registerToForm');
 
 onMounted(() => {
@@ -120,13 +143,21 @@ const setOptionRef = (el, index) => {
 };
 
 const validateField = () => {
+  validated.value = true;
+
   const hasValue = !!props.modelValue;
   const isValid = props.required ? hasValue : true;
 
-  errMsg.value = isValid ? '' : `Required`;
+  errMsg.value = isValid ? '' : props.requiredErrorMessage;
 
   return isValid;
 };
+
+// Arrow keys choose an option without going through handleOptionClick, so
+// without this an error outlived the value that corrected it.
+watch(() => props.modelValue, () => {
+  if (validated.value) validateField();
+});
 
 const focusField = () => {
   triggerRef.value.focus();
