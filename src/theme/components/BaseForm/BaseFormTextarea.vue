@@ -13,6 +13,7 @@
       :required="required"
       :aria-describedby="`${name}-description`"
       v-bind="attributes"
+      :maxlength="limit"
       @input="emit('update:modelValue', $event.target.value)"
     ></textarea>
 
@@ -33,7 +34,25 @@
       >
         {{ errMsg }}
       </span>
+
+      <span
+        v-if="limit !== null"
+        class="visually-hidden"
+      >
+        Up to {{ limit }} characters.
+      </span>
     </div>
+
+    <!-- The running count is visual only. Announcing it on every keystroke
+    would talk over the typing; the limit itself is in the description, and
+    the browser enforces it through maxlength. -->
+    <span
+      v-if="limit !== null"
+      class="base-form-textarea__count field-count"
+      aria-hidden="true"
+    >
+      {{ characterCount }}/{{ limit }}
+    </span>
   </div>
 </template>
 
@@ -67,12 +86,31 @@ const props = defineProps({
     default: () => {},
   },
 
+  // Caps the length and shows a count under the field ("0/200"). Without it
+  // there's no count, as before. A maxlength passed in `attributes` counts too.
+  maxlength: {
+    type: Number,
+    required: false,
+    default: null,
+  },
+
   modelValue: {
     required: true,
   },
 });
 
 const emit = defineEmits(['update:modelValue']);
+
+const limit = computed(() => {
+  const attributeLimit = props.attributes?.maxlength;
+  const normalizedAttributeLimit = attributeLimit == null ? null : Number(attributeLimit);
+
+  return props.maxlength ?? (Number.isFinite(normalizedAttributeLimit) ? normalizedAttributeLimit : null);
+});
+
+// String length counts UTF-16 code units, the same unit maxlength enforces, so
+// the count and the cap always agree.
+const characterCount = computed(() => (props.modelValue ? String(props.modelValue).length : 0));
 
 const inputRef = ref(null);
 

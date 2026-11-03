@@ -96,6 +96,12 @@ const props = defineProps({
     default: `Required`,
   },
 
+  invalidEmailErrorMessage: {
+    type: String,
+    required: false,
+    default: `Invalid email`,
+  },
+
   attributes: {
     type: Object,
     required: false,
@@ -137,7 +143,7 @@ const validateField = () => {
 
   if (props.type === 'email' && hasValue) {
     isValid = EMAIL_PATTERN.test(props.modelValue);
-    errMsg.value = isValid ? '' : 'Invalid email';
+    errMsg.value = isValid ? '' : props.invalidEmailErrorMessage;
   }
 
   return isValid;
