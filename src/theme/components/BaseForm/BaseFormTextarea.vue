@@ -36,7 +36,7 @@
       </span>
 
       <span
-        v-if="limit"
+        v-if="limit !== null"
         class="visually-hidden"
       >
         Up to {{ limit }} characters.
@@ -47,7 +47,7 @@
     would talk over the typing; the limit itself is in the description, and
     the browser enforces it through maxlength. -->
     <span
-      v-if="limit"
+      v-if="limit !== null"
       class="base-form-textarea__count field-count"
       aria-hidden="true"
     >
@@ -101,7 +101,12 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const limit = computed(() => props.maxlength ?? (Number(props.attributes?.maxlength) || null));
+const limit = computed(() => {
+  const attributeLimit = props.attributes?.maxlength;
+  const normalizedAttributeLimit = attributeLimit == null ? null : Number(attributeLimit);
+
+  return props.maxlength ?? (Number.isFinite(normalizedAttributeLimit) ? normalizedAttributeLimit : null);
+});
 
 // String length counts UTF-16 code units, the same unit maxlength enforces, so
 // the count and the cap always agree.
