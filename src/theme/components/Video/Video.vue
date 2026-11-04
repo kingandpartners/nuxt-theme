@@ -60,7 +60,7 @@
         v-if="isPaused"
         class="video__icon video__icon--play svg svg--align-height"
         aria-hidden="true"
-        v-html="PlayIcon"
+        v-html="playIconMarkup"
       >
       </span>
 
@@ -68,7 +68,7 @@
         v-else
         class="video__icon video__icon--pause svg svg--align-height"
         aria-hidden="true"
-        v-html="PauseIcon"
+        v-html="pauseIconMarkup"
       >
       </span>
     </button>
@@ -131,6 +131,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  // Raw SVG markup for the control button, e.g. a site's own icon imported
+  // with ?raw. Each falls back to the shared icon.
+  playIcon: {
+    type: String,
+    default: null,
+  },
+
+  pauseIcon: {
+    type: String,
+    default: null,
+  },
 });
 
 const emit = defineEmits([ 'videoLoaded', 'videoEnded' ]);
@@ -144,6 +156,9 @@ const observer = ref(null);
 const onResizeHandler = ref(null);
 
 const eagerLoad = computed(() => props.loadType === 'eager');
+
+const playIconMarkup = computed(() => props.playIcon || PlayIcon);
+const pauseIconMarkup = computed(() => props.pauseIcon || PauseIcon);
 
 const isSingleVideo = computed(() => {
   const { tabletVideo, mobileVideo } = props.videoOptions;
