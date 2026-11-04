@@ -4,6 +4,7 @@
     class="base-form-combo-box base-form__field-wrap base-form__field-wrap--combo-box input-wrap combo-box"
     :class="{
       'has-error': !!errMsg,
+      'has-value': !!modelValue,
       'is-expanded': isExpanded,
     }"
   >
@@ -21,6 +22,16 @@
       @click.prevent="handleToggleClick"
       @keydown="handleToggleKeypress"
     >
+      <!-- With floatingLabel, the label stays on the page beside the value, so
+      a consumer can float it. It's aria-hidden because the button's
+      aria-label already names the field. -->
+      <span
+        v-if="floatingLabel"
+        class="combo-box__label label"
+        aria-hidden="true"
+        v-text="label"
+      ></span>
+
       <span
         class="combo-box__btn-text combo-box-text"
         v-text="triggerButtonText"
@@ -95,6 +106,14 @@ const props = defineProps({
     default: false,
   },
 
+  // Renders the label in its own element that stays after a selection, instead
+  // of the value replacing it, so it can be styled as a floating label.
+  floatingLabel: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+
   requiredErrorMessage: {
     type: String,
     required: false,
@@ -134,7 +153,7 @@ onMounted(() => {
   });
 });
 
-const triggerButtonText = computed(() => props.modelValue || props.label);
+const triggerButtonText = computed(() => (props.floatingLabel ? props.modelValue : props.modelValue || props.label));
 
 const triggerButtonLabel = computed(() => `${props.label} ${props.modelValue || ''}`);
 
