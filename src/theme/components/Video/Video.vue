@@ -278,7 +278,9 @@ const onIntersection = ([entry]) => {
   observer.value.unobserve(video.value);
 };
 
-const load = async () => {
+// `resume` is for a reload on resize: play again only if the video was
+// playing. The first load plays only with attributes.autoplay.
+const load = async ({ resume = null } = {}) => {
   if (isLoaded.value) return;
 
   const { mp4, webm, mov } = getSrc();
@@ -299,9 +301,18 @@ const load = async () => {
 
   video.value.load();
 
-  if (props.attributes.autoplay) {
-    await video.value.play();
-    isPaused.value = false;
+  // video.load() stops playback, so the button follows what actually plays.
+  // A browser that refuses to play (autoplay blocked) leaves it on Play.
+  const shouldPlay = resume ?? !!props.attributes.autoplay;
+  isPaused.value = true;
+
+  if (shouldPlay) {
+    try {
+      await video.value.play();
+      isPaused.value = false;
+    } catch {
+      isPaused.value = true;
+    }
   }
 
   isLoaded.value = true;
@@ -352,8 +363,12 @@ const onResize = () => {
 
   if (eagerLoad.value && isSingleVideo.value) return;
 
+  // Reloading stops the video; resume only if it was playing, so a video the
+  // visitor paused stays paused.
+  const wasPlaying = !video.value.paused;
+
   isLoaded.value = false;
-  load();
+  load({ resume: wasPlaying });
 };
 
 const mountResizeHandler = () => debounce(onResize, 300);
