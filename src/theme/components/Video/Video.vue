@@ -278,9 +278,16 @@ const onIntersection = ([entry]) => {
   observer.value.unobserve(video.value);
 };
 
-const load = async () => {
+// Counts loads, so a play() from a load that a newer one has replaced (a
+// second resize while it was pending) can't change the button.
+let loadId = 0;
+
+// `resume` is for a reload on resize: play again only if the video was
+// playing. The first load plays only with attributes.autoplay.
+const load = async ({ resume = null } = {}) => {
   if (isLoaded.value) return;
 
+  const id = ++loadId;
   const { mp4, webm, mov } = getSrc();
 
   if (eagerLoad.value) {
@@ -299,13 +306,24 @@ const load = async () => {
 
   video.value.load();
 
-  if (props.attributes.autoplay) {
-    await video.value.play();
-    isPaused.value = false;
-  }
-
+  // video.load() stops playback, so the button follows what actually plays.
+  // The new file is in place from here, so the video counts as loaded before
+  // play() settles: a resize across another breakpoint meanwhile reloads it
+  // rather than being ignored.
+  isPaused.value = true;
   isLoaded.value = true;
   emit('videoLoaded');
+
+  if (!(resume ?? !!props.attributes.autoplay)) return;
+
+  // A browser that refuses to play (autoplay blocked) leaves it on Play. A
+  // newer load's video.load() aborts this play(); its result is ignored.
+  try {
+    await video.value.play();
+    if (id === loadId) isPaused.value = false;
+  } catch {
+    if (id === loadId) isPaused.value = true;
+  }
 };
 
 const getSrc = () => {
@@ -352,8 +370,16 @@ const onResize = () => {
 
   if (eagerLoad.value && isSingleVideo.value) return;
 
+  // Reloading stops the video; resume only if it was playing, so a video the
+  // visitor paused stays paused. The native autoplay attribute (from
+  // attributes.autoplay) would start any reloaded video by itself, so it
+  // comes off: load() decides whether to play. Vue re-applies it only if
+  // `attributes` changes.
+  const wasPlaying = !video.value.paused;
+  video.value.autoplay = false;
+
   isLoaded.value = false;
-  load();
+  load({ resume: wasPlaying });
 };
 
 const mountResizeHandler = () => debounce(onResize, 300);
